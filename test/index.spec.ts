@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
 import { mount } from "@vue/test-utils";
 import Calendar from "@/components/calendar/Calendar.vue";
-import CalendarDaysGrid from "@/components/calendar/CalendarDaysGrid.vue";
+
 describe("Calendar component tests", () => {
   test("Calendar mounted", () => {
     const wrapper = mount(Calendar, {
-      props: {}
+      props: { modelValue: null }
     });
 
     const root = wrapper.get(".calendar");
@@ -14,7 +14,7 @@ describe("Calendar component tests", () => {
 
   test("Year select rendered and closed by default", () => {
     const wrapper = mount(Calendar, {
-      props: {}
+      props: { modelValue: null }
     });
 
     const yearSelectRootElement = wrapper.get("[data-test-years-select]");
@@ -83,9 +83,9 @@ describe("Calendar component tests", () => {
     );
 
     await gridCellsElements[randomCellIndex].trigger("click");
-    
+
     expect(+gridCellsElements[randomCellIndex].text()).toEqual(
-      new Date(wrapper.emitted('update:modelValue')![0][0] as string).getDate()
+      new Date(wrapper.emitted("update:modelValue")![0][0] as string).getDate()
     );
   });
 });

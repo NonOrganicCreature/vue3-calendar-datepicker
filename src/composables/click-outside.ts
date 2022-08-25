@@ -28,11 +28,11 @@ const useClickOutside = (rootRef: Ref, cb: () => void) => {
   };
 
   onMounted(() => {
-    document.addEventListener("click", inner, true);
+    document.addEventListener("click", inner);
   });
 
   onUnmounted(() => {
-    document.removeEventListener("click", inner, true);
+    document.removeEventListener("click", inner);
   });
 };
 

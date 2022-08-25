@@ -7,7 +7,7 @@ const DEFAULT_YEAR_OPTIONS_COUNT = 10;
 
 const props = defineProps<{
   yearsSelectList?: Array<string>;
-  modelValue?: Date | null;
+  modelValue: Date | null;
   locale?: Intl.LocalesArgument;
 }>();
 
@@ -27,19 +27,11 @@ const yearsList = computed(
       .map((year: number, index: number) => (year + index).toString())
 );
 
-const selectedMonth = ref(0);
-const selectedYear = ref(+yearsList.value[0]);
-const selectedDay = ref(1);
-
 const headerMonth = ref(monthList[0]);
 const headerYear = ref(yearsList.value[0]);
 const headerDay = ref(1);
 
 if (props.modelValue) {
-  selectedYear.value = props.modelValue.getFullYear();
-  selectedMonth.value = props.modelValue.getMonth();
-  selectedDay.value = props.modelValue.getDate();
-
   headerYear.value = props.modelValue.getFullYear().toString();
   headerMonth.value = monthList[props.modelValue.getMonth()];
   headerDay.value = props.modelValue.getDate();
@@ -49,12 +41,8 @@ const currentDateFormatted = computed(() => {
   if (props.modelValue === null) {
     return "Select date...";
   }
-  const tempDate = new Date(
-    selectedYear.value,
-    selectedMonth.value,
-    selectedDay.value
-  );
-  return tempDate.toLocaleString(props.locale, {
+
+  return props.modelValue.toLocaleString(props.locale, {
     day: "numeric",
     month: "long",
     year: "numeric"
@@ -62,17 +50,13 @@ const currentDateFormatted = computed(() => {
 });
 
 const onDaySelect = (value: number) => {
-  selectedYear.value = +headerYear.value;
-  selectedMonth.value = monthList.indexOf(headerMonth.value);
-  selectedDay.value = value;
-
-  const initialModelValueIfNull = new Date(
-    selectedYear.value,
-    selectedMonth.value,
-    selectedDay.value
+  const newSelectedDate = new Date(
+    +headerYear.value,
+    monthList.indexOf(headerMonth.value),
+    value
   );
 
-  emit("update:modelValue", currentDate.value || initialModelValueIfNull);
+  emit("update:modelValue", newSelectedDate);
 };
 
 const currentDate = computed<Date | null>(() => {
@@ -80,13 +64,7 @@ const currentDate = computed<Date | null>(() => {
     return null;
   }
 
-  const modifiedDate = new Date(
-    selectedYear.value,
-    selectedMonth.value,
-    selectedDay.value
-  );
-
-  return modifiedDate;
+  return props.modelValue;
 });
 
 const headerDate = computed<Date>(() => {
